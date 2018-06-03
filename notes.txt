@@ -1,0 +1,363 @@
+
+Algebra
+
+https://www.youtube.com/watch?v=YScIPA8RbVE&list=PLZ0oL77R91PAXDm0xCYwwI_1EUDv2WHUW&index=4&t=3418s
+
+symbols, operations and laws
+
+
+mathematics
+
+symbols: 0,1,2,x,y,z
+operations: +, -, %, *
+laws: 0+x = x
+
+Haskell
+
+symbols: Types ((), Int, Bool,...)
+operations: Type constructors (Maybe, Either)
+laws: ?
+
+symbols: Things
+operations: Ways to make new things (combine old things to give new things)
+laws: Rules things should follow
+
+
+One
+data Unit = Unit
+data () = ()
+
+
+Addition
+
+data a :+ b = AddL a | AddR b -- disjoint union, sum type, discriminated union
+
+
+data Either a b = Left a | Right b
+
+these two data type are the same (isomorphic)
+
+eg. Bool :+ Bool = 2 + 2 => 4 (Cardinality)
+
+Multiplication
+
+data a :* b = Mult a b
+
+Bool :* Bool = 2 x 2 = 4
+
+data (a, b) = (a, b) -- pair
+
+these two data type are the same (isomorphic)
+
+Zero
+
+data Void -- can't make a value
+
+
+Two
+
+type Two = Unit :+ Unit
+
+data Bool = False | True
+
+
+Notation
+
+Void => 0
+
+Unit => 1
+
+Bool => 2
+
+Addition => a + b
+
+Multiplication => a * b
+
+we can count the number of constructors to find cardinality of some
+
+
+Laws
+
+0 + x = x (left identity)
+
+Either Void x = x (isomorphic)
+
+x = Either Void x
+
+def onlyX[X](value:X): Either[Nothing, X] = Right(value)
+onlyX: [X](value: X)Either[Nothing,X]
+
+//can call get because we have proved that a Left can't be created
+def onlyRight[X](value: Either[Nothing, X]): X = value.right.get
+onlyRight: [X](value: Either[Nothing,X])X
+
+0 * x = 0
+
+(Void, x) = Void (isomorphic)
+
+(Nothing, X) = Nothing
+
+1 * x = x
+
+((), x) = x
+
+//because you always know/can create (), there's no point having it at all)
+
+//unit as a value as opposed to performing side effects
+
+//does this apply to every singleton?
+
+x + y = y + x
+
+Either x y = Either y x
+
+x * y = y * x
+
+(x, y) = (y, x)
+
+
+
+Functions (exponents)
+
+data a-> b = ?
+
+Bool -> Bool (Domain -> CoDomain) = 2^2 = 4
+
+True -> True 
+True -> False
+True <- True (Identity)
+False <- False (Identity)
+
+(A, B, C) -> Bool = 2^ 3 = 8
+
+A -> True
+B -> True
+C -> True
+
+A -> False
+B -> False
+C -> False
+
+2 * 2 * 2
+
+a -> b <=> b ^ a -- works for finite types
+
+Laws
+
+1^a = 1
+
+a -> () = () -- everything maps to (). a is ignored
+
+
+a ^ 1 = a
+
+() -> a = a
+
+(b * c) ^ a = b ^ a * c ^ a
+
+a -> (b, c) = (a -> b, a -> c) //exponent rule
+
+c ^ ba = (c^b) ^ a
+
+(a, b) -> c = a -> b -> c //uncurry, currying
+
+
+Recursive types
+
+L = 1 + x L
+L = 1 + x (1 + x L)
+L = 1 + x + x2 (1 + x L)
+L = 1 + x + x2 + x3 + x4 ...
+
+
+Trees?
+
+Zippers
+
+data  Zip a = Zip [a] a [a]
+
+----
+
+The cardinality of a datatype is the number of possible values it defines. Knowing how many possible values inhabit a type can help you reason about your program. Cardinality can help you determine how many different possible implementations there are of a function for a given type signature.
+
+In mathematics, the cardinality of a set is a measure of the "number of elements of the set".
+
+In logic, mathematics, and computer science, the arity /ˈærɪti/ (About this sound listen) of a function or operation is the number of arguments or operands that the function takes.
+
+Data constructors that only have a unary constructor have the same cardinality of the type they contain
+
+data Goats = Goats Int deriving (Eq, Show)
+
+The Goats constructor has the cardinality of Int
+
+The cardinality of a unary constructor is the identity function
+
+The cardinality of a new type is the same as the type it contains. It can have only one constructor
+
+Product types distribute over sumtypes:
+
+a * ( b + c ) = (a * b ) + (a * c)
+
+2*(3+4) = 2*3+2*4
+
+Normal form: Is a sum of products
+
+
+A stricture form of normal form would require representing products with tuples and sums with Either
+Either
+
+
+Sum types, product types, functions (exponents) and  recursive types
+
+
+Function type is the exponent operator
+
+Given a function a -> b, we can calculate the
+inhabitants with the formula ba
+
+Bool -> Bool
+2            2
+
+2 pow 2
+
+String -> Bool
+large        2
+
+
+2 pow large vs
+
+Bool -> String
+2            large
+
+
+large pow 2 (smaller)
+
+which is smaller? Keep the exponent smaller
+
+a -> b -> c
+
+(c ^ b) ^ a
+
+distributive law
+
+c ^ (b ^ a)
+
+
+https://sidburn.github.io/blog/2016/04/26/algebraic-data-types
+
+The point of calculating the Cardinality is that we can calculate if two different types can represent the same data
+
+
+With this we now know that we can transform any Line into a Line2 or vice-versa. This is important, because in programming it is important to choose the right data-format. Choosing the right format often means some task can either becomes more easier to solve, or we could come up with more efficient algorithms. By calculating the Cardinality we can be sure that we have different representation of the same data.
+
+
+type Line  = (int * int) * (int * int)
+    type Line2 = int * int * int * int
+
+    let line  = (0,0), (10,10)
+    let line2 = 0,0,10,10
+
+Another way to use it is when we explicitly want to reduce the amount of possible values. We did that above with the PhoneNumber type. Having less possible values also means we need less code to check the edge-cases. Changing a string into a DU with just four cases makes the code simpler and less error-prone. Especially if the language forces you to check for all cases you could have, what F# does.
+
+Make invalid states un-representable
+https://channel9.msdn.com/Events/FSharp-Events/fsharpConf-2016/Types-Properties-Software
+
+https://github.com/ploeh/KataTennis/blob/master/KataTennis/Tennis.fs
+
+
+http://tomasp.net/blog/types-and-math.aspx/
+
+Address and phone number example
+
+https://pavpanchekha.com/blog/zippers/derivative.html
+
+An algebraic data type is one way of combining types into bigger types. For example, a 3-dimensional coordinate is made up of three coordinates, and we can treat a binary tree of strings as a certain structure built out of strings, which is a certain structure built out of characters.
+
+
+	
+
+https://codewords.recurse.com/issues/three/algebra-and-calculus-of-algebraic-data-types
+
+https://pavpanchekha.com/blog/zippers/huet.html
+
+---
+
+https://www.youtube.com/watch?v=w1WMykh7AxA (Cat theory 5.2)
+
+Addition and Multiplication imply having a Monoid
+
+(a, b) is not (b, a)
+
+but they are isomorphic - have the same information and has an inverse
+
+the `swap` function. The `swap` function is its own inverse!
+
+Not symmetric, but Symmetric up to isomorphism
+
+Monoid Laws
+
+((a, b), c) ~ (a, (b, c)) //idris compiler for recursive types
+
+(a, ()) ~ a //unit, mempty
+
+you can always create a Unit from thin air. Given an `a` -> (a, ())
+
+Either a b ~ Either b a
+
+data Triple a b c = Left a | Middle b | Right c
+
+Void -> "Uninhabited"
+
+Either a Void ~ a
+
+Either Void b ~ b
+
+Multiply by 0 law
+
+a * 0 = 0
+
+(a, Void) ~ Void 
+
+a * (b + c) ~ a * b + a * c
+
+(a, Either b c) ~ Either (a, b) (a, c)
+
+
+Having an Addition and Multiplication Monoid => Semi ring/Rig. (Not a ring because it needs an inverse; Subtraction and Division)
+
+Rig -> Ring without the n(egative)
+
+data Maybe a  = Nothing | Just a
+                            Either   ()      a
+
+
+https://www.youtube.com/watch?v=iXZR1v3YN-8 (Cat theory 8.2)
+
+a ^ (b +c) = a ^ b + a ^ c
+
+Either b c -> a = Either (b -> a, c -> a)
+
+
+Algebra also corresponds to logic
+
+
+True  //inhabited
+() 
+
+False //uninhabited
+Void
+
+a | b = Either a b = (a + b)
+
+a & b = (a, b) = (a * b)
+
+(a =>b means a implies b)
+
+a => b = a ->b = b ^ a
+
+(a -> b, a) -> b
+
+//if a implies b and you have an a, then you can prove b
+(a => b & a) -> b
+
+

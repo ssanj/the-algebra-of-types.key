@@ -1,0 +1,126 @@
+# Putting the Algebra in Data Types
+
+- What is an Algebra in Mathematics?
+  - Symbols (0,1,2,3,x,y,z ...)
+  - Operations (+, -,*, / ...)
+  - Laws (associativity, commutativity, identity ...)
+
+  a + b = b + a
+
+- How does it relate to Computing?
+  - Symbols (Things)
+  - Operations(Ways to combine things to make other things)
+  - Laws (Rules the things should follow)
+
+  ---
+
+  - Symbols (Unit, Bool, Int ...)
+  - Operations (addition, multiplication, exponent)
+  - Laws (associativity, commutativity, identity ...)
+
+--- what are the laws of addition?
+- Associativity
+- Commutativity
+- Identity (left and right)
+
+--- what are the laws of multiplication?
+- Associativity
+- Commutativity
+- Identity (left and right)
+- Distribution
+
+--- what are the laws of exponent?
+- x ^ 0 = 1
+- x ^ 1 = x
+x-1 = 1/x
+x ^ m * x ^ n = x^ (m+n)
+(xy) ^ n = x^ n * y ^ n
+
+
+Cardinality
+
+> The number possible values of a data type
+
+Void (0)
+
+Unit (1)
+()
+
+Bool (2)
+True | False
+
+Int (2^32 ~ 4B)
+
+String (2^32 - 1 ~ 2B)
+* Complete works of William Shakespear has 884,647 words
+
+
+Sum Types
+
+data ThreeState = Checked | Unchecked | Unknown
+
+What is the Cardinality?
+
+Checked (1) | Unchecked (1) | Unknown (1)
+= 1 + 1 + 1 = 3
+
+data Direction = North | East | South | West
+
+What is the Cardinality?
+
+North (1) | East (1) | South (1) | West (1)
+= 1 + 1 + 1 + 1 = 4
+
+- Just add the Cardinality of each constructors (Nullary vs Unary vs others)
+
+Product Types
+data Direction = North | East | South | West
+
+data Speed = Slow | Fast
+
+data Velocity = Velocity { direction :: Direction,  speed :: Speed }
+
+possible values:
+
+Velocity North Fast
+Velocity North Slow
+Velocity East Fast
+Velocity East Slow      
+Velocity South Fast
+Velocity South Slow
+Velocity West Fast
+Velocity West Slow
+= 8
+
+Speed = Slow (1) | Fast (1)
+= 2
+
+Direction = North (1) | East (1) | South (1) | West (1)
+= 4
+
+Size of a product type = multiplication of the Cardinality of component types
+= 2 * 4
+= 8
+
+- Show how to calculate Cardinality
+
+Recursive Types
+- Example
+- Show how to calculate Cardinality
+
+Functions
+- Example
+- Show how to calculate Cardinality
+
+- How to laws apply to Sum, Product and Function types?
+
+Uses of Cardinality
+
+- Finding Isomorphisms
+  - Same information (possibly different structures), reversible
+  - Two different types with the same Cardinality can represent the same data without losing information
+- Reducing the possible values to consider (easier to reason about)
+
+* Leave out null and Exceptions
+
+

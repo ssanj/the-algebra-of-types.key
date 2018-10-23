@@ -51,7 +51,7 @@ True | False
 
 Int (2^32 ~ 4B)
 
-String (2^32 - 1 ~ 2B)
+String (2^32 - 1 ~ 2B * 2^16)
 * Complete works of William Shakespear has 884,647 words
 
 
@@ -85,7 +85,7 @@ possible values:
 Velocity North Fast
 Velocity North Slow
 Velocity East Fast
-Velocity East Slow      
+Velocity East Slow
 Velocity South Fast
 Velocity South Slow
 Velocity West Fast
